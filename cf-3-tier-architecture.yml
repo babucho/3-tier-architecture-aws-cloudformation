@@ -34,7 +34,7 @@ Parameters:
     Description: Password for the RDS DB instance
     Type: String
     NoEcho: true
-    Default: "dillibabu422"
+    Default: "********"
 
 
 
@@ -99,6 +99,16 @@ Resources:
       Tags:
         - Key: Name
           Value: db-sub
+  PrivateDbSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-south-1a
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.4.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: db-sub2
 
   #Security Group
   WebSecurityGroup:
@@ -201,9 +211,9 @@ Resources:
       ImageId: ami-0f5ee92e2d63afc18
       InstanceType: !Ref InstanceTypeParameter
       KeyName: !Ref Key
-      VpcId: !Ref VPC
       SubnetId: !Ref PublicWebSubnet
-      SecurityGroupIds: !Ref WebSecurityGroup
+      SecurityGroupIds:
+      - Ref: WebSecurityGroup
   
   AppServer:
     Type: AWS::EC2::Instance
@@ -212,9 +222,9 @@ Resources:
       ImageId: ami-0f5ee92e2d63afc18
       InstanceType: !Ref InstanceTypeParameter
       KeyName: !Ref Key
-      VpcId: !Ref VPC
       SubnetId: !Ref PrivateAppSubnet
-      SecurityGroupIds: !Ref AppSecurityGroup
+      SecurityGroupIds:
+      - Ref: AppSecurityGroup
 
   RdsInstance:
     Type: AWS::RDS::DBInstance
@@ -235,7 +245,7 @@ Resources:
       DBSubnetGroupDescription: "Subnet group for RDS"
       SubnetIds:
         - !Ref PrivateDbSubnet
-        - !Ref PublicWebSubnet
+        - !Ref PrivateDbSubnet1
 
 Outputs:
   WebServerIp:
