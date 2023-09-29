@@ -106,7 +106,6 @@ Resources:
     Properties:
       GroupName: Web Tier
       GroupDescription: Security group for the Web Tier
-      VpcId: !Ref VPC
       Tags:
         - Key: Name
           Value: web-SG
@@ -125,7 +124,6 @@ Resources:
     Properties:
       GroupName: App Tier
       GroupDescription: Security group for the Application Tier
-      VpcId: !Ref VPC
       Tags:
         - Key: Name
           Value: app-SG
